@@ -4,7 +4,9 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
 import indexRouter from './routes/index';
-import usersRouter from './routes/users';
+import studentsRouter from './routes/students';
+
+import './database';
 
 class App {
   constructor() {
@@ -23,11 +25,13 @@ class App {
     this.routes();
   }
 
-  middlewares() {}
+  middlewares() {
+    // this.server.use(express.json());
+  }
 
   routes() {
     this.server.use('/', indexRouter);
-    this.server.use('/users', usersRouter);
+    this.server.use('/students', studentsRouter);
   }
 }
 
