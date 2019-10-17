@@ -4,6 +4,8 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
 import indexRouter from './routes/index';
+import sessionsRouter from './routes/sessions';
+import usersRouter from './routes/users';
 import studentsRouter from './routes/students';
 
 import './database';
@@ -31,6 +33,8 @@ class App {
 
   routes() {
     this.server.use('/', indexRouter);
+    this.server.use('/sessions', sessionsRouter);
+    this.server.use('/users', usersRouter);
     this.server.use('/students', studentsRouter);
   }
 }

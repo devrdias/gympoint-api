@@ -1,33 +1,33 @@
-import Student from '../models/Student';
+import User from '../models/User';
 
-class StudentController {
+class UserController {
   /**
-   * Create Student
+   * Create User
    */
   async store(req, res) {
-    const userExists = await Student.findOne({
+    const userExists = await User.findOne({
       where: { email: req.body.email },
     });
     if (userExists) {
       return res.status(400).json({ error: 'User already exists' });
     }
 
-    const { id, name, email, birth, weight, height } = await Student.create(
+    const { id, name, email, birth, weight, height } = await User.create(
       req.body
     );
     return res.status(200).json({ id, name, email, birth, weight, height });
   }
 
   /**
-   * Update Student
+   * Update User
    */
   async update(req, res) {
     const { email, oldPassword } = req.body;
 
     // check if email is already registered by other user
-    const user = await Student.findByPk(req.userId);
+    const user = await User.findByPk(req.userId);
     if (email !== user.email) {
-      const userExists = await Student.findOne({ where: { email } });
+      const userExists = await User.findOne({ where: { email } });
       if (userExists) {
         return res.status(400).json({ error: 'Email not available' });
       }
@@ -44,4 +44,4 @@ class StudentController {
   }
 }
 
-export default new StudentController();
+export default new UserController();
