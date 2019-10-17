@@ -11,7 +11,9 @@
 
 ### Tools
 
-Você deverá criar a aplicação do zero utilizando o [Express](https://expressjs.com/), além de precisar configurar as seguintes ferramentas:
+[Node.js](https://nodejs.org/) [Express](https://expressjs.com/)
+
+This project also comes with the following features configured:
 
 - Sucrase + Nodemon;
 - ESLint + Prettier + EditorConfig;
