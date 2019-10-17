@@ -11,13 +11,13 @@
 
 ### Tools
 
-[Node.js](https://nodejs.org/) [Express](https://expressjs.com/)
+[Node.js](https://nodejs.org/)    |     [Express](https://expressjs.com/)
 
 This project also comes with the following features configured:
 
 - Sucrase + Nodemon;
 - ESLint + Prettier + EditorConfig;
-- Sequelize (Utilize PostgreSQL ou MySQL);
+- Sequelize (PostgreSQL);
 
 ### Functionalities
 
@@ -37,7 +37,7 @@ yarn sequelize db:seed:all
 #### 2. Students register
 
 Students Model
-```json
+```js
 { name, email, birth, weight, height }
 ```
 
@@ -49,4 +49,4 @@ Students can only be registered by authenticated `Users`.
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 - **[MIT license](http://opensource.org/licenses/mit-license.php)**
-- Copyright 2019 © <a href="http://fvcproductions.com" target="_blank">devrdias</a>.
+- Copyright 2019 © <a href="https://github.com/devrdias/" target="_blank">devrdias</a>.
