@@ -7,7 +7,7 @@ class Student extends Model {
       {
         name: Sequelize.STRING,
         email: Sequelize.STRING,
-        password: Sequelize.VIRTUAL,
+        password: Sequelize.VIRTUAL, // does not persist virtual data
         password_hash: Sequelize.STRING,
         birth: Sequelize.DATE,
         weight: Sequelize.STRING,

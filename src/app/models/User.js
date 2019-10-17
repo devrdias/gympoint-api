@@ -8,7 +8,7 @@ class User extends Model {
         name: Sequelize.STRING,
         email: Sequelize.STRING,
         is_admin: Sequelize.BOOLEAN,
-        password: Sequelize.VIRTUAL,
+        password: Sequelize.VIRTUAL, // virtual doest not persist
         password_hash: Sequelize.STRING,
       },
       {
@@ -28,6 +28,10 @@ class User extends Model {
 
   checkPassword(password) {
     return bcrypt.compare(password, this.password_hash);
+  }
+
+  isAdmin() {
+    return this.is_admin;
   }
 }
 

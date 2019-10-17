@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 
+// TODO: change hash secret
 module.exports = {
   up: QueryInterface => {
     return QueryInterface.bulkInsert(
