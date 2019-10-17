@@ -26,8 +26,8 @@ class SessionController {
     }
 
     // generate user token
-    const { id, name } = user;
-    const token = jwt.sign({ id }, authConfig.secret, {
+    const { id, name, admin } = user;
+    const token = jwt.sign({ id, admin }, authConfig.secret, {
       expiresIn: authConfig.expiresIn,
     });
 
@@ -37,6 +37,7 @@ class SessionController {
         id,
         name,
         email,
+        admin,
       },
       token,
     });

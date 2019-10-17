@@ -12,7 +12,7 @@ class UserController {
       email: Yup.string()
         .email()
         .required(),
-      is_admin: Yup.boolean().default(false),
+      admin: Yup.boolean().default(false),
       password: Yup.string()
         .required()
         .min(6),
@@ -40,7 +40,7 @@ class UserController {
     const schema = Yup.object().shape({
       name: Yup.string(),
       email: Yup.string().email(),
-      is_admin: Yup.boolean(),
+      admin: Yup.boolean(),
       oldPassword: Yup.string().min(6),
       password: Yup.string()
         .min(6)

@@ -8,7 +8,11 @@ import indexRouter from './routes/index';
 import sessionsRouter from './routes/sessions';
 import usersRouter from './routes/users';
 import studentsRouter from './routes/students';
+import plansRouter from './routes/plans';
 
+import authMiddleware from './app/middlewares/auth';
+
+// database connections
 import './database';
 
 class App {
@@ -31,10 +35,23 @@ class App {
   }
 
   routes() {
+    // ===================
+    // unauthorized routes
+    // ===================
     this.server.use('/', indexRouter);
     this.server.use('/sessions', sessionsRouter);
+
+    // ==============================================
+    // mixed routes - authorization inside the router
+    // ==============================================
     this.server.use('/users', usersRouter);
+
+    // =================
+    // authorized routes
+    // =================
+    this.server.use(authMiddleware);
     this.server.use('/students', studentsRouter);
+    this.server.use('/plans', plansRouter);
   }
 
   exceptionHandler() {
