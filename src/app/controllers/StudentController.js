@@ -7,7 +7,7 @@ class StudentController {
    */
   async store(req, res) {
     // validate Student Schema
-    const schema = Yup.object().schema({
+    const schema = Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string()
         .email()
@@ -18,6 +18,7 @@ class StudentController {
       birth: Yup.date().required(),
       weight: Yup.string(),
       height: Yup.string(),
+      canceled_at: Yup.date(),
     });
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
@@ -25,7 +26,7 @@ class StudentController {
 
     // check if student/email already exists
     const studentExists = await Student.findOne({
-      where: { email: req.body.email },
+      where: { email: req.body.email, canceled_at: null },
     });
     if (studentExists) {
       return res.status(400).json({ error: 'Student already exists' });
@@ -57,6 +58,7 @@ class StudentController {
       birth: Yup.date(),
       weight: Yup.string(),
       height: Yup.string(),
+      canceled_at: Yup.date(),
     });
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
@@ -66,7 +68,9 @@ class StudentController {
     // check if email is already registered by other user
     const user = await Student.findByPk(req.userId);
     if (email !== user.email) {
-      const studentExists = await Student.findOne({ where: { email } });
+      const studentExists = await Student.findOne({
+        where: { email, canceled_at: null },
+      });
       if (studentExists) {
         return res.status(400).json({ error: 'Email not available' });
       }

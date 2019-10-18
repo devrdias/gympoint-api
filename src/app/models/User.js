@@ -10,6 +10,7 @@ class User extends Model {
         admin: Sequelize.BOOLEAN,
         password: Sequelize.VIRTUAL, // virtual doest not persist
         password_hash: Sequelize.STRING,
+        canceled_at: Sequelize.DATE,
       },
       {
         sequelize,

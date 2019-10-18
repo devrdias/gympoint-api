@@ -16,6 +16,7 @@ class UserController {
       password: Yup.string()
         .required()
         .min(6),
+      canceled_at: Yup.date(),
     });
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
@@ -23,7 +24,9 @@ class UserController {
 
     // Check if user/email already exists
     const { email } = req.body;
-    const userExists = await User.findOne({ where: { email } });
+    const userExists = await User.findOne({
+      where: { email, canceled_at: null },
+    });
     if (userExists) {
       return res.status(400).json({ error: 'User already exists' });
     }
@@ -50,6 +53,7 @@ class UserController {
       confirmPassword: Yup.string().when('password', (password, field) =>
         password ? field.required().oneOf([Yup.ref('password')]) : field
       ),
+      canceled_at: Yup.date(),
     });
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
@@ -59,7 +63,9 @@ class UserController {
     // check if email is already registered by other user
     const user = await User.findByPk(req.userId);
     if (email !== user.email) {
-      const userExists = await User.findOne({ where: { email } });
+      const userExists = await User.findOne({
+        where: { email, canceled_at: null },
+      });
       if (userExists) {
         return res.status(400).json({ error: 'Email not available' });
       }

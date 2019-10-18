@@ -87,6 +87,9 @@ class PlanController {
    */
   async delete(req, res) {
     const plan = await Plan.findByPk(req.params.id);
+    if (!plan) {
+      return res.status(400).json({ error: 'Item not found to delete' });
+    }
 
     plan.canceled_at = new Date();
     await plan.save();

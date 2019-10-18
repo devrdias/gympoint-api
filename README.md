@@ -1,3 +1,9 @@
+DUVIDAS
+- como adicionar imagem ao email ?
+- como fazer do calculo do price/end_date unico ?
+- o que acontece com os campos extras (nao necessarios) enviados para um update ?
+
+
 <h1 align="center">
   <img alt="Gympoint" title="Gympoint" src="logo.png" width="200px" />
 </h1>
@@ -156,7 +162,6 @@ Crie uma rota para a academia responder um pedido de auxílio:
 Exemplo de requisição: `POST https://gympoint.com/help-orders/1/answer`
 
 Quando um pedido de auxílio for respondido, o aluno deve receber um e-mail da plataforma com a pergunta e resposta da academia;
-
 
 ---
 ## License
