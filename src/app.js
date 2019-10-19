@@ -6,7 +6,9 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import Youch from 'youch';
 import Arena from 'bull-arena';
+import * as Sentry from '@sentry/node';
 import arenaConfig from './config/arena';
+import sentryConfig from './config/sentry';
 
 // capture async errors from express
 import 'express-async-errors';
@@ -32,16 +34,24 @@ class App {
     // create server
     this.server = express();
 
+    // initiate sentry error monitoring
+    Sentry.init(sentryConfig);
+
     // configure PUBLIC paths
     this.configurePaths();
 
     // load middlewares and routes
     this.middlewares();
     this.routes();
+
+    // custom error handler to return error to client
     this.exceptionHandler();
   }
 
   middlewares() {
+    // The request handler must be the first middleware on the app
+    this.server.use(Sentry.Handlers.requestHandler());
+
     this.server.use(logger('dev'));
     this.server.use(express.json());
     this.server.use(express.urlencoded({ extended: false }));
@@ -71,6 +81,9 @@ class App {
     this.server.use('/plans', plansRouter);
     this.server.use('/enrollments', enrollmentsRouter);
     this.server.use('/help-orders', helpOrdersRouter);
+
+    // The error handler must be before any other error middleware and after all controllers
+    this.server.use(Sentry.Handlers.errorHandler());
   }
 
   configurePaths() {

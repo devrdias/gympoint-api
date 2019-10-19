@@ -10,6 +10,7 @@
     "lint-fix": "eslint --fix ."
   },
   "dependencies": {
+    "@sentry/node": "^5.7.1",
     "bcryptjs": "^2.4.3",
     "bee-queue": "^1.2.2",
     "bull-arena": "^2.6.4",
