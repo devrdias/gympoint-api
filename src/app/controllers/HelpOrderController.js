@@ -1,9 +1,14 @@
+import * as Yup from 'yup';
 import HelpOrder from '../models/HelpOrder';
-import User from '../models/User';
 import Student from '../models/Student';
-import Mail from '../../libs/Mail';
+import User from '../models/User';
+import HelpAnsweredMail from '../jobs/HelpAnsweredMail';
+import Queue from '../../libs/Queue';
 
-class HelpOrderController {
+class HelpController {
+  /**
+   * List Help Orders not answered
+   */
   async index(req, res) {
     const helps = await HelpOrder.findAll({
       attributes: [
@@ -32,18 +37,26 @@ class HelpOrderController {
     return res.status(200).json(helps);
   }
 
+  /**
+   * Answer a Help Order
+   */
   async store(req, res) {
+    // validate HelpOrder schema
+    const schema = Yup.object().shape({
+      answer: Yup.string()
+        .max(500)
+        .required(),
+    });
+    if (!schema.isValid(req.body)) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
+
+    // check if help order exists
     const { id } = req.params;
     const { answer } = req.body;
-
     const help = await HelpOrder.findOne({
       where: { id, answered_at: null },
       include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: ['name', 'email', 'admin'],
-        },
         {
           model: Student,
           as: 'student',
@@ -59,35 +72,26 @@ class HelpOrderController {
     help.user_id = req.userId;
     await help.save();
 
+    // get user data to use on email
+    const user = await User.findByPk(req.userId);
+
     // Send email to student with the answer
-    const { student, user } = help;
-    await Mail.sendMail({
-      to: `${student.name} <${student.email}>`,
-      subject: 'You have an answer from Gym Point!',
-      template: 'helpOrderAnswered',
-      context: {
-        name: student.name,
-        question: help.question,
-        answer: help.answer,
-        user: user.name,
-        image: `${process.env.APP_URL}/files/logo.png`,
-      },
-      // attachments: [
-      //   {
-      //     filename: 'logo.png',
-      //     path: resolve(__dirname, '..', 'views', 'images'),
-      //     cid: 'logo',
-      //   },
-      // ],
-    });
+    Queue.add(HelpAnsweredMail.key, { help, user });
 
     return res.status(200).json(help);
   }
 
+  /**
+   * Delete a Help Order
+   */
   async delete(req, res) {
     const { id } = req.params;
 
+    // check if help order exists
     const help = await HelpOrder.findByPk(id);
+    if (!help) {
+      return res.status(400).json({ error: 'Item not found to delete' });
+    }
     help.canceled_at = new Date();
 
     await help.save();
@@ -96,4 +100,4 @@ class HelpOrderController {
   }
 }
 
-export default new HelpOrderController();
+export default new HelpController();

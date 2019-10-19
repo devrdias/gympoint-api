@@ -9,7 +9,7 @@ router.post('/', StudentController.store);
 router.put('/', StudentController.update);
 
 router.get('/:id/checkins', CheckinController.index);
-router.put('/:id/checkins', CheckinController.update);
+router.post('/:id/checkins', CheckinController.store);
 
 router.get('/:student_id/help-orders', StudentHelpOrderController.index);
 router.post('/:student_id/help-orders', StudentHelpOrderController.store);

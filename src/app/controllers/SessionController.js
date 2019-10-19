@@ -5,6 +5,9 @@ import User from '../models/User';
 import authConfig from '../../config/auth';
 
 class SessionController {
+  /**
+   * Return Authenticated User with API Token
+   */
   async store(req, res) {
     // Schema validation
     const schema = Yup.object().shape({

@@ -5,6 +5,8 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import Youch from 'youch';
+import Arena from 'bull-arena';
+import arenaConfig from './config/arena';
 
 // capture async errors from express
 import 'express-async-errors';
@@ -22,18 +24,21 @@ import authMiddleware from './app/middlewares/auth';
 // database connections
 import './database';
 
+// Arena-bull queue monitoring
+const arena = Arena(arenaConfig.config, arenaConfig.listenOpts);
+
 class App {
   constructor() {
     // create server
     this.server = express();
 
+    // configure PUBLIC paths
+    this.configurePaths();
+
     // load middlewares and routes
     this.middlewares();
     this.routes();
     this.exceptionHandler();
-
-    // configure paths
-    this.configurePaths();
   }
 
   middlewares() {
@@ -44,6 +49,9 @@ class App {
   }
 
   routes() {
+    // Make arena's resources (js/css deps) available at the base app route
+    this.server.use('/', arena);
+
     // ===================
     // unauthorized routes
     // ===================

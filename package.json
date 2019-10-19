@@ -4,12 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "nodemon ./bin/www.js",
-    "dev:debug": "nodemon --inspect ./bin/www.js",
+    "dev:debug": "concurrently 'nodemon --inspect ./bin/www.js' 'nodemon src/queue.js'",
+    "queue": "nodemon src/queue.js",
     "lint": "eslint .",
     "lint-fix": "eslint --fix ."
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "bee-queue": "^1.2.2",
+    "bull-arena": "^2.6.4",
+    "concurrently": "^5.0.0",
     "cookie-parser": "~1.4.4",
     "date-fns": "^2.5.0",
     "debug": "~4.1.1",

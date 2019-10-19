@@ -1,11 +1,10 @@
-import { parseISO, addMonths, format } from 'date-fns';
+import { addMonths, parseISO } from 'date-fns';
 import * as Yup from 'yup';
-import enUS from 'date-fns/locale/en-US';
-import { resolve } from 'path';
+import Queue from '../../libs/Queue';
 import Enrollment from '../models/Enrollment';
-import Student from '../models/Student';
 import Plan from '../models/Plan';
-import Mail from '../../libs/Mail';
+import Student from '../models/Student';
+import EnrollmentMail from '../jobs/EnrollmentMail';
 
 class EnrollmentController {
   /**
@@ -14,7 +13,7 @@ class EnrollmentController {
   async index(req, res) {
     const { page = 1 } = req.query;
 
-    const enrollments = await Enrollments.findAll({
+    const enrollments = await Enrollment.findAll({
       where: { canceled_at: null },
       attributes: ['student_id', 'plan_id', 'start_date', 'end_date', 'price'],
       order: ['start_date'],
@@ -90,44 +89,24 @@ class EnrollmentController {
 
     // const isoStartDate = parseISO(req.body.start_date);
     // const isoEndDate = parseISO(req.body.end_date);
-    // const enrollment = await Enrollment.create({
-    //   ...req.body,
-    //   end_date: calcEndDate,
-    //   price: calcPrice,
-    // });
+    const enrollment = await Enrollment.create({
+      ...req.body,
+      end_date: calcEndDate,
+      price: calcPrice,
+    });
 
     /**
      * Send welcome message email
      */
-    const { name, email } = student;
-    console.log(resolve(__dirname, '..', 'views', 'images'));
-    await Mail.sendMail({
-      to: `${name} <${email}>`,
-      subject: 'Welcome to Gym Point!',
-      template: 'enrollmentConfirmation',
-      context: {
-        name,
-        title,
-        duration,
-        start_date: format(parseISO(req.body.start_date), 'yyyy-MM-dd', {
-          locale: enUS,
-        }),
-        end_date: format(parseISO(req.body.end_date), 'yyyy-MM-dd', {
-          locale: enUS,
-        }),
-        price,
-        image: `${process.env.APP_URL}/files/logo.png`,
-      },
-      // attachments: [
-      //   {
-      //     filename: 'logo.png',
-      //     path: resolve(__dirname, '..', 'views', 'images'),
-      //     cid: 'logo',
-      //   },
-      // ],
+    Queue.add(EnrollmentMail.key, {
+      enrollment,
+      student,
+      title,
+      duration,
+      price,
     });
 
-    return res.status(200).json({ okd: true });
+    return res.status(200).json(enrollment);
   }
 
   /**

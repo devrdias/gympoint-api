@@ -3,6 +3,9 @@ import Student from '../models/Student';
 import Checkin from '../schemas/Checkin';
 
 class CheckinController {
+  /**
+   * List checkins
+   */
   async index(req, res) {
     const { id: student_id } = req.params;
 
@@ -10,7 +13,10 @@ class CheckinController {
     return res.status(200).json(checkins);
   }
 
-  async update(req, res) {
+  /**
+   * List checkins
+   */
+  async store(req, res) {
     const { id: student_id } = req.params;
 
     // check if student exists

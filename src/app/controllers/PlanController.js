@@ -19,6 +19,7 @@ class PlanController {
    * Create a Plan
    */
   async store(req, res) {
+    // validate schema
     const schema = Yup.object().shape({
       title: Yup.string().required(),
       price: Yup.number()
@@ -48,6 +49,7 @@ class PlanController {
    * Update a Plan
    */
   async update(req, res) {
+    // validate schema
     const schema = Yup.object().shape({
       title: Yup.string(),
       price: Yup.number().moreThan(0),
