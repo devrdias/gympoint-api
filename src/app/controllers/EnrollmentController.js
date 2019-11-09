@@ -15,7 +15,14 @@ class EnrollmentController {
 
     const enrollments = await Enrollment.findAll({
       where: { canceled_at: null },
-      attributes: ['student_id', 'plan_id', 'start_date', 'end_date', 'price'],
+      attributes: [
+        'student_id',
+        'plan_id',
+        'start_date',
+        'end_date',
+        'price',
+        'active',
+      ],
       order: ['start_date'],
       limit: 20,
       offset: (page - 1) * 20,
