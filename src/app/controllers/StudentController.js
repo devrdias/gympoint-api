@@ -1,7 +1,26 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import Student from '../models/Student';
 
 class StudentController {
+  /**
+   * List Students
+   */
+  async index(req, res) {
+    const { q } = req.query;
+    let students;
+    if (q) {
+      students = await Student.findAll({
+        where: { name: { [Op.iLike]: q }, canceled_at: null },
+      });
+    } else {
+      students = await Student.findAll({
+        where: { canceled_at: null },
+      });
+    }
+    return res.status(200).json({ students });
+  }
+
   /**
    * Create Student
    */

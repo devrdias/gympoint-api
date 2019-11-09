@@ -5,6 +5,7 @@ import StudentHelpOrderController from '../app/controllers/StudentHelpOrderContr
 
 const router = new Router();
 
+router.get('/', StudentController.index);
 router.post('/', StudentController.store);
 router.put('/', StudentController.update);
 
